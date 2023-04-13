@@ -52,7 +52,8 @@ export const deleteAffair = (
 ): AffairType[] => {
   // need to fix any
   //   const removeAffairs =
-  return affairs.filter((item) => item._id !== _id); // need to fix
+
+  return affairs.filter((item) => item._id !== _id);
 };
 
 function HW2() {
@@ -62,6 +63,7 @@ function HW2() {
   const filteredAffairs = filterAffairs(affairs, filter);
 
   const deleteAffairCallback = (_id: number) => {
+    
     setAffairs(deleteAffair(filteredAffairs, _id));
     // need to fix any
     // need to fix
