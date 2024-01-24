@@ -3,6 +3,8 @@ import s from "./App.module.css";
 import HW1 from "../s2-homeworks/hw01/HW1";
 import HW2 from "../s2-homeworks/hw02/HW2";
 import HW5 from "../s2-homeworks/hw05/HW5";
+import HW10 from "../s2-homeworks/hw10/HW10";
+import HW11 from "../s2-homeworks/hw11/HW11";
 import HW13 from "../s2-homeworks/hw13/HW13";
 
 function App() {
