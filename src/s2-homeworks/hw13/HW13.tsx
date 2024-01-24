@@ -19,7 +19,7 @@ const HW13 = () => {
   const [text, setText] = useState("");
   const [info, setInfo] = useState("");
   const [image, setImage] = useState("");
-  const [btnStatus, setBtnStatus] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const send = (x?: boolean | null) => () => {
     const url =
@@ -31,31 +31,35 @@ const HW13 = () => {
     setImage("");
     setText("");
     setInfo("...loading");
-
+    setDisabled(true);
     axios
       .post(url, { success: x })
       .then((res) => {
-        setBtnStatus(false);
         setCode("Код 200!");
         setImage(success200);
-        setText(res.data.errorText);
-        setInfo(res.data.info);
         // дописать
       })
       .catch((e) => {
-        setBtnStatus(false);
-        setText(e.response?.data?.errorText || e.message);
-        setInfo(e.response?.data?.info || e.name);
-        if (e.response?.status === 400) {
+        // дописать
+        if (e.response.status === 400) {
           setCode("Код 400!");
+          setText(e.response?.data.errorText);
+          setInfo(e.response?.data.info);
           setImage(error400);
-        } else if (e.response?.status === 500) {
+        } else if (e.response.status === 500) {
           setCode("Код 500!");
           setImage(error500);
+          setText(e.response?.data.errorText);
+          setInfo(e.response?.data.info);
         } else {
-          setCode("Error!");
+          setCode("ERROR!");
           setImage(errorUnknown);
+          setText(e.response?.data.errorText);
+          setInfo(e.response?.data.info);
         }
+      })
+      .finally(() => {
+        setDisabled(false);
       });
   };
 
@@ -70,7 +74,7 @@ const HW13 = () => {
             onClick={send(true)}
             xType={"secondary"}
             // дописать
-            disabled={btnStatus}
+            disabled={disabled}
           >
             Send true
           </SuperButton>
@@ -79,7 +83,7 @@ const HW13 = () => {
             onClick={send(false)}
             xType={"secondary"}
             // дописать
-            disabled={btnStatus}
+            disabled={disabled}
           >
             Send false
           </SuperButton>
@@ -88,7 +92,7 @@ const HW13 = () => {
             onClick={send(undefined)}
             xType={"secondary"}
             // дописать
-            disabled={btnStatus}
+            disabled={disabled}
           >
             Send undefined
           </SuperButton>
@@ -97,7 +101,7 @@ const HW13 = () => {
             onClick={send(null)} // имитация запроса на не корректный адрес
             xType={"secondary"}
             // дописать
-            disabled={btnStatus}
+            disabled={disabled}
           >
             Send null
           </SuperButton>
