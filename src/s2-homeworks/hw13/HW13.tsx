@@ -19,54 +19,57 @@ const HW13 = () => {
   const [text, setText] = useState("");
   const [info, setInfo] = useState("");
   const [image, setImage] = useState("");
-  const [isDisableBtn, setIsDisableBtn] = useState(false);
+
   const send = (x?: boolean | null) => () => {
     const url =
       x === null
         ? "https://xxxxxx.ccc" // имитация запроса на не корректный адрес
-        : "https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test";
+        : "https://samurai.it-incubator.io/api/3.0/homework/test";
+    //: 'https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test'
 
     setCode("");
     setImage("");
     setText("");
     setInfo("...loading");
-    setIsDisableBtn(true);
+
     axios
       .post(url, { success: x })
       .then((res) => {
+        console.log(res);
         setCode("Код 200!");
         setImage(success200);
-        setInfo("код 200 - обычно означает что скорее всего всё ок)");
-        setText("...всё ок)");
         // дописать
+        setText("...всё ок)");
+        setInfo("код 200 - обычно означает что скорее всего всё ок)");
       })
       .catch((e) => {
-        if (e.response.status === 400) {
-          setCode("Ошибка 400!");
-          setImage(error400);
-          setInfo(
-            "ошибка 400 - обычно означает что скорее всего фронт отправил что-то не то на бэк!"
-          );
-          setText("Ты не отправил success в body вообще!");
-        }
-        if (e.response.status === 500) {
+        // дописать
+        //console.log(e.response.data.yourBody.success)
+        console.log(e);
+        console.log(e.code);
+        if (e.code === "ERR_BAD_RESPONSE") {
           setCode("Ошибка 500!");
           setImage(error500);
+          setText("эмитация ошибки на сервере");
           setInfo(
             "ошибка 500 - обычно означает что что-то сломалось на сервере, например база данных)"
           );
-          setText("эмитация ошибки на сервере");
         }
-        if (e.response.status === 0) {
+        if (e.code === "ERR_BAD_REQUEST") {
+          setCode("Ошибка 400!");
+          setImage(error400);
+          setText("Ты не отправил success в body вообще!");
+          setInfo(
+            "ошибка 400 - обычно означает что скорее всего фронт отправил что-то не то на бэк!"
+          );
+        }
+        if (e.code === "ERR_NETWORK") {
+          //if (url === null) {
           setCode("Error!");
           setImage(errorUnknown);
-          setInfo("AxiosError");
           setText("Network Error");
+          setInfo("Error");
         }
-        // дописать
-      })
-      .finally(() => {
-        setIsDisableBtn(false);
       });
   };
 
@@ -80,8 +83,8 @@ const HW13 = () => {
             id={"hw13-send-true"}
             onClick={send(true)}
             xType={"secondary"}
-            disabled={isDisableBtn}
             // дописать
+            disabled={info === "...loading"}
           >
             Send true
           </SuperButton>
@@ -89,8 +92,8 @@ const HW13 = () => {
             id={"hw13-send-false"}
             onClick={send(false)}
             xType={"secondary"}
-            disabled={isDisableBtn}
             // дописать
+            disabled={info === "...loading"}
           >
             Send false
           </SuperButton>
@@ -98,8 +101,8 @@ const HW13 = () => {
             id={"hw13-send-undefined"}
             onClick={send(undefined)}
             xType={"secondary"}
-            disabled={isDisableBtn}
             // дописать
+            disabled={info === "...loading"}
           >
             Send undefined
           </SuperButton>
@@ -107,8 +110,8 @@ const HW13 = () => {
             id={"hw13-send-null"}
             onClick={send(null)} // имитация запроса на не корректный адрес
             xType={"secondary"}
-            disabled={isDisableBtn}
             // дописать
+            disabled={info === "...loading"}
           >
             Send null
           </SuperButton>

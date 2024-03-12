@@ -6,12 +6,13 @@ import HW5 from "../s2-homeworks/hw05/HW5";
 import HW10 from "../s2-homeworks/hw10/HW10";
 import HW11 from "../s2-homeworks/hw11/HW11";
 import HW13 from "../s2-homeworks/hw13/HW13";
+import HW15 from "../s2-homeworks/hw15/HW15";
 
 function App() {
   return (
     <div className={s.App}>
-      <HW1 />
-      <HW2 />
+      {/* <HW1 />
+      <HW2 /> */}
 
       {/*раскомментировать по ходу выполнения*/}
       {/*<HW2/>*/}
@@ -19,10 +20,11 @@ function App() {
       {/*<HW4/>*/}
 
       {/*при выполнении дз 5 и более - закомментировать здесь дз 1-4, так как они есть внутри дз 5*/}
-      <HW5 />
+      {/* <HW5 />
       <HW10 />
       <HW11 />
-      <HW13 />
+      <HW13 /> */}
+      <HW15 />
     </div>
   );
 }
