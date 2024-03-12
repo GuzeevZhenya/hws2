@@ -27,17 +27,17 @@ type ParamsType = {
   count: number;
 };
 
-const getTechs = (params: ParamsType) => {
-  return axios
-    .get<{ techs: TechType[]; totalCount: number }>(
+const getTechs = async (params: ParamsType) => {
+  try {
+    return await axios.get<{ techs: TechType[]; totalCount: number }>(
       "https://incubator-personal-page-back.herokuapp.com/api/3.0/homework/test3",
       { params }
-    )
-    .catch((e) => {
-      alert(e.response?.data?.errorText || e.message);
-    });
+    );
+  } catch (e: any) {
+    alert(e.response?.data?.errorText || e.message);
+  }
 };
-const HW15 = () => {
+export const HW15 = () => {
   const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(4);
@@ -49,24 +49,25 @@ const HW15 = () => {
   const sendQuery = (params: any) => {
     setLoading(true);
     getTechs(params).then((res) => {
-      setTechs(res.data.techs);
-      setTotalCount(res.data.totalCount);
-      setLoading(false);
+      if (res) {
+        setTechs(res.data.techs);
+        setTotalCount(res.data.totalCount);
+      }
     });
   };
 
   const onChangePagination = (newPage: number, newCount: number) => {
     setPage(newPage);
     setCount(newCount);
-    sendQuery({ page: newPage, count: newCount });
-    setSearchParams({ page: newPage, count: newCount });
+    sendQuery({ page: newPage.toString(), count: newCount.toString() });
+    setSearchParams({ page: newPage.toString(), count: newCount.toString() });
   };
 
   const onChangeSort = (newSort: string) => {
     setSort(newSort);
     setPage(1);
     sendQuery({ page: 1, count });
-    setSearchParams({ page: 1, count });
+    setSearchParams({page: page.toString(), count: count.toString()})
   };
 
   useEffect(() => {
@@ -114,7 +115,11 @@ const HW15 = () => {
 
           <div className={s.developerHeader}>
             developer
-            <SuperSort sort={sort} value={"developer"} onChange={onChangeSort} />
+            <SuperSort
+              sort={sort}
+              value={"developer"}
+              onChange={onChangeSort}
+            />
           </div>
         </div>
 
