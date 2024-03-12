@@ -28,13 +28,22 @@ const HW14 = () => {
     const [find, setFind] = useState('')
     const [isLoading, setLoading] = useState(false)
     const [searchParams, setSearchParams] = useSearchParams()
-    const [techs, setTechs] = useState<string[]>([])
+    const [techs, setTechs] = useState<string[]>([]) //+
 
     const sendQuery = (value: string) => {
+        setTechs([])
         setLoading(true)
         getTechs(value)
             .then((res) => {
                 // делает студент
+                if (res && res.data.techs.length > 0) {
+                    setLoading(false)
+                    setTechs(res.data.techs)
+                }
+                else {
+                    setLoading(false)
+                    setTechs(['NO MATCHES'])
+                }
 
                 // сохранить пришедшие данные
 
@@ -48,7 +57,7 @@ const HW14 = () => {
 
         // добавить/заменить значение в квери урла
         // setSearchParams(
-
+        setSearchParams(value)
         //
     }
 
