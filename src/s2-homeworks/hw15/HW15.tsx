@@ -5,12 +5,11 @@ import axios from "axios";
 import SuperPagination from "./common/c9-SuperPagination/SuperPagination";
 import { useSearchParams } from "react-router-dom";
 import SuperSort from "./common/c10-SuperSort/SuperSort";
-import { Preloader } from "./common/Preloader/Preloader";
 
 /*
- * 1 - дописать SuperPagination-  done
- * 2 - дописать SuperSort-  done
- * 3 - проверить pureChange тестами -  done
+ * 1 - дописать SuperPagination
+ * 2 - дописать SuperSort
+ * 3 - проверить pureChange тестами
  * 3 - дописать sendQuery, onChangePagination, onChangeSort в HW15
  * 4 - сделать стили в соответствии с дизайном
  * 5 - добавить HW15 в HW5/pages/JuniorPlus
@@ -30,12 +29,10 @@ type ParamsType = {
 
 const getTechs = (params: ParamsType) => {
   return axios
-    .get<{ techs: TechType[]; totalCount: number }>(
-      "https://samurai.it-incubator.io/api/3.0/homework/test3",
-      { params }
-    )
+    .get<{ techs: TechType[]; totalCount: number }>("https://samurai.it-incubator.io/api/3.0/homework/test3", {
+      params,
+    })
     .catch((e) => {
-      console.log("alo");
       alert(e.response?.data?.errorText || e.message);
     });
 };
@@ -45,54 +42,43 @@ const HW15 = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(4);
   const [idLoading, setLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(36);
+  const [totalCount, setTotalCount] = useState(100);
   const [searchParams, setSearchParams] = useSearchParams();
   const [techs, setTechs] = useState<TechType[]>([]);
 
-  const sendQuery = async (params: any) => {
+  const sendQuery = (params: any) => {
     setLoading(true);
-    try {
-      const res = await getTechs(params);
+    getTechs(params).then((res) => {
+      // делает студент
+
+      // сохранить пришедшие данные
       if (res) {
         setTechs(res.data.techs);
         setTotalCount(res.data.totalCount);
-        console.log(res);
       }
       setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
+      //
+    });
   };
 
   const onChangePagination = (newPage: number, newCount: number) => {
+    // делает студент
     setPage(newPage);
     setCount(newCount);
-
-    const pageParam: { page?: string } = newPage
-      ? { page: newPage.toString() }
-      : {};
-    const countParam: { count?: string } = newCount
-      ? { count: newCount.toString() }
-      : {};
-    const { page, count, ...lastQueries } = Object.fromEntries(searchParams);
-    const allParams = { ...pageParam, ...countParam, ...lastQueries };
-
-    sendQuery(allParams);
-    setSearchParams(allParams);
+    sendQuery({ count: newCount, page: newPage });
+    setSearchParams({ count: String(newCount) });
+    //
   };
 
   const onChangeSort = (newSort: string) => {
+    // делает студент
     setSort(newSort);
-    setPage(1);
-
-    const sortParam: { sort?: string } = newSort ? { sort: newSort } : {};
-    const { sort, page, ...lastQueries } = Object.fromEntries(searchParams);
-    const allSortParams = { ...lastQueries, ...sortParam };
-
-    sendQuery(allSortParams);
-    setSearchParams(allSortParams);
+    setPage(1); // при сортировке сбрасывать на 1 страницу
+    sendQuery({ count, page, sort: newSort });
+    setSearchParams({ sort: newSort });
+    //
   };
+
   useEffect(() => {
     const params = Object.fromEntries(searchParams);
     sendQuery({ page: params.page, count: params.count });
@@ -119,30 +105,21 @@ const HW15 = () => {
       <div className={s2.hw}>
         {idLoading && (
           <div id={"hw15-loading"} className={s.loading}>
-            <Preloader />
+            Loading...
           </div>
         )}
 
-        <SuperPagination
-          page={page}
-          itemsCountForPage={count}
-          totalCount={totalCount}
-          onChange={onChangePagination}
-        />
+        <SuperPagination page={page} itemsCountForPage={count} totalCount={totalCount} onChange={onChangePagination} />
 
         <div className={s.rowHeader}>
           <div className={s.techHeader}>
-            <span className={s.text}>Tech</span>
+            tech
             <SuperSort sort={sort} value={"tech"} onChange={onChangeSort} />
           </div>
 
           <div className={s.developerHeader}>
-            <span className={s.text}>Developer</span>
-            <SuperSort
-              sort={sort}
-              value={"developer"}
-              onChange={onChangeSort}
-            />
+            developer
+            <SuperSort sort={sort} value={"developer"} onChange={onChangeSort} />
           </div>
         </div>
 
